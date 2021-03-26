@@ -108,7 +108,7 @@ function restyle_blocks(nodes, count)
 					end
 					if i == tens - 1 then
 						count = count - tens
-						i = 0
+						i = -1
 					end
 				elseif count == 7 then
 					minetest.set_node(pos, { name = "numberblocks:block", param2 = i })
