@@ -104,6 +104,32 @@ function restyle_blocks(nodes, count)
 		end
 	end
 end
+
+function numberblocks_block_on_place(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local stack, success = minetest.item_place_node(itemstack, placer, pointed_thing, param2)
+
+		if success then
+			local nodes, count = find_blocks(pointed_thing.above)
+
+			restyle_blocks(nodes, count)
+		end
+
+		return stack, success
+	end
+	return itemstack
+end
+
+function numberblocks_block_after_dig_node(pos, oldnode, oldmetadata, digger)
+	-- Look in each direction for a broken one
+	for i = 1, 6 do
+		local pos2 = vector.add(pos, adjacent_vectors[i])
+		local nodes, count = find_blocks(pos2)
+		if count > 0 then
+			restyle_blocks(nodes, count)
+		end
+	end
+end
  
 minetest.register_node("numberblocks:block", {
 	description = "Number block",
@@ -118,29 +144,6 @@ minetest.register_node("numberblocks:block", {
 	paramtype2 = "color",
 	node_box = node_box,
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local stack, success = minetest.item_place_node(itemstack, placer, pointed_thing, param2)
-
-			if success then
-				local nodes, count = find_blocks(pointed_thing.above)
-
-				restyle_blocks(nodes, count)
-			end
-
-			return stack, success
-		end
-		return itemstack
-	end,
-
-	after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		-- Look in each direction for a broken one
-		for i = 1, 6 do
-			local pos2 = vector.add(pos, adjacent_vectors[i])
-			local nodes, count = find_blocks(pos2)
-			if count > 0 then
-				restyle_blocks(nodes, count)
-			end
-		end
-	end,
+	on_place = numberblocks_block_on_place,
+	after_dig_node = numberblocks_block_after_dig_node,
 })
