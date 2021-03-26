@@ -42,13 +42,17 @@ function nodes_set(nodes, pos)
 	nodes[pos.y][pos.x][pos.z] = true
 end
 
+function is_number_block(node)
+	return string.sub(node.name,1,string.len("numberblocks:block")) == "numberblocks:block"
+end
+
 function find_blocks(pos)
 	-- Construct a list of block nodes
 	local nodes = {}
 
 	-- Assume pointed_thing is a node
 	local node = minetest.get_node(pos)
-	if node.name ~= "numberblocks:block" then
+	if not is_number_block(node) then
 		return nodes, 0
 	end
 	nodes_set(nodes, pos)
@@ -68,7 +72,7 @@ function find_blocks(pos)
 			local pos2 = vector.add(pos, adjacent_vectors[i])
 			if not nodes_test(nodes, pos2) then
 				node = minetest.get_node(pos2)
-				if node.name == "numberblocks:block" then
+				if is_number_block(node) then
 					nodes_set(nodes, pos2)
 					table.insert(unhandled, pos2)
 					count = count + 1
@@ -91,8 +95,22 @@ function restyle_blocks(nodes, count)
 			for z in orderedPairs(zs) do
 				local pos = {x = x, y = y, z = z};
 
-				--local node = minetest.get_node()
-				if count == 7 then
+				if count >= 10 and count < 100 then
+					local tens = math.floor(count/10)*10
+					if tens == 70 then
+						local tens_in_70 = 10 + math.floor(i/10)*10
+						minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_in_70) })
+					elseif tens == 90 then
+						local thirties_in_90 = math.floor(i/30)
+						minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_in_90) })
+					else
+						minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens) })
+					end
+					if i == tens - 1 then
+						count = count - tens
+						i = 0
+					end
+				elseif count == 7 then
 					minetest.set_node(pos, { name = "numberblocks:block", param2 = i })
 				elseif count == 9 then
 					minetest.set_node(pos, { name = "numberblocks:block", param2 = 8 + math.floor(i/3) })
@@ -147,3 +165,73 @@ minetest.register_node("numberblocks:block", {
 	on_place = numberblocks_block_on_place,
 	after_dig_node = numberblocks_block_after_dig_node,
 })
+
+local ten_blocks = {
+	[10] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#FF002B",
+		tile_front = "numberblocks_block_white_side.png"
+	},
+	[20] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#FF9500",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#F7D98D",
+	},
+	[30] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#F4E41C",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#FDFF9C",
+	},
+	[40] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#BEFFA6",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#BEFFA6",
+	},
+	[50] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#A9F5EA",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#A9F5EA",
+	},
+	[60] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#613999",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#9870E1",
+	},
+	[70] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#C777E5",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#D0A0FF",
+	},
+	[80] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#F73BAB",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#FF96E0",
+	},
+	[90] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#C8CBD0",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#C8CBD0",
+	},
+	[91] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#A3A4A6",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#A3A4A6",
+	},
+	[92] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#848F8B",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#848F8B",
+	},
+}
+
+for i,info in pairs(ten_blocks) do
+	minetest.register_node("numberblocks:block_"..tostring(i), {
+		description = "Number block "..tostring(i),
+		tiles = {
+			info.tile_side,
+			info.tile_side,
+			info.tile_side,
+			info.tile_side,
+			info.tile_front,
+			info.tile_front,
+		},
+		groups = { cracky = 1 },
+
+		drawtype = "nodebox",
+		paramtype = "light",
+		paramtype2 = "color",
+		node_box = node_box,
+
+		on_place = numberblocks_block_on_place,
+		after_dig_node = numberblocks_block_after_dig_node,
+	})
+end
