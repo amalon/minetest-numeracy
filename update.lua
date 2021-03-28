@@ -87,6 +87,11 @@ function restyle_blocks(nodes, count)
 					local tens = math.floor(count/10)*10
 					if tens == 70 then
 						local tens_in_70 = 10 + math.floor(i/10)*10
+						if tens_in_70 == 10 then
+							tens_in_70 = 71
+						elseif tens_in_70 == 70 then
+							tens_in_70 = 77
+						end
 						minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_in_70) })
 					elseif tens == 90 then
 						local thirties_in_90 = math.floor(i/30)

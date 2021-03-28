@@ -53,7 +53,11 @@ local ten_blocks = {
 		tile_side  = "numberblocks_block_white_side.png^[multiply:#613999",
 		tile_front = "numberblocks_block_white_side.png^[multiply:#9870E1",
 	},
-	[70] = {
+	[71] = {
+		tile_side  = "numberblocks_block_white_side.png^[multiply:#FF002B",
+		tile_front = "numberblocks_block_white_side.png^[multiply:#FF8C9B",
+	},
+	[77] = {
 		tile_side  = "numberblocks_block_white_side.png^[multiply:#C777E5",
 		tile_front = "numberblocks_block_white_side.png^[multiply:#D0A0FF",
 	},
