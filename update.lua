@@ -21,7 +21,7 @@ function nodes_test(nodes, pos)
 	if not nodes[pos.y][pos.x][pos.z] then
 		return NODE_NONE
 	end
-	return nodes[pos.y][pos.x][pos.z]
+	return nodes[pos.y][pos.x][pos.z].t
 end
 
 function nodes_set(nodes, pos, node_type)
@@ -31,7 +31,10 @@ function nodes_set(nodes, pos, node_type)
 	if not nodes[pos.y][pos.x] then
 		nodes[pos.y][pos.x] = {}
 	end
-	nodes[pos.y][pos.x][pos.z] = node_type
+	nodes[pos.y][pos.x][pos.z] = {
+		t = node_type,
+		o = 0,
+	}
 end
 
 function get_node_type(node)
@@ -107,18 +110,34 @@ local function numberblocks_add_number(pos, number)
 	end
 end
 
--- Change the colour of blocks depending on the number of them
-local function numberblocks_restyle_blocks(nodes, count)
-	-- find best place for number nodes
-	local max_y = -31000
-	local sum_pos = { x = 0, y = 0, z = 0 }
-	local sum_count = 0
-
-	local left = count;
+-- Assign an ordering to the nodes
+local function numberblocks_sort_blocks(nodes, count)
 	local i = 0
 	for y, xs in orderedPairs(nodes) do
 		for x, zs in orderedPairs(xs) do
-			for z, node_type in orderedPairs(zs) do
+			for z, info in orderedPairs(zs) do
+				if info.t == NODE_BLOCK then
+					nodes[y][x][z].o = i;
+					i = i + 1
+				end
+			end
+		end
+	end
+end
+
+-- Change the colour of blocks depending on the number of them
+local function numberblocks_restyle_blocks(nodes, count)
+	numberblocks_sort_blocks(nodes, count)
+
+	-- find best place for number nodes
+	local max_y = -31000
+	local sum_p s = { x = 0, y = 0, z = 0 }
+	local sum_count = 0
+
+	for y, xs in orderedPairs(nodes) do
+		for x, zs in orderedPairs(xs) do
+			for z, info in orderedPairs(zs) do
+				local node_type = info.t
 				local pos = {x = x, y = y, z = z};
 				if node_type == NODE_NUMBER then
 					minetest.remove_node(pos)
@@ -132,34 +151,38 @@ local function numberblocks_restyle_blocks(nodes, count)
 					sum_pos = vector.add(sum_pos, pos)
 					sum_count = sum_count + 1
 
-					if left >= 10 and left < 100 then
-						local tens = math.floor(left/10)*10
-						if tens == 70 then
-							local tens_in_70 = 10 + math.floor(i/10)*10
-							if tens_in_70 == 10 then
-								tens_in_70 = 71
-							elseif tens_in_70 == 70 then
-								tens_in_70 = 77
+					local order = info.o
+
+					local count_in_100 = count % 100
+					local order_in_100 = order % 100
+					local count_in_10 = count_in_100 % 10
+					local order_in_10 = order_in_100 % 10
+					local count_10s_in_100 = math.floor(count_in_100/10)*10
+					local order_10s_in_100 = math.floor(order_in_100/10)*10
+
+					if order_10s_in_100 < count_10s_in_100 then
+						-- Blocks of 10
+						if count_10s_in_100 == 70 then
+							local tens_for_70 = 10 + order_10s_in_100
+							if tens_for_70 == 10 then
+								tens_for_70 = 71
+							elseif tens_for_70 == 70 then
+								tens_for_70 = 77
 							end
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_in_70) })
-						elseif tens == 90 then
-							local thirties_in_90 = math.floor(i/30)
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_in_90) })
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_for_70) })
+						elseif count_10s_in_100 == 90 then
+							local thirties_for_90 = math.floor(order_10s_in_100/30)
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_for_90) })
 						else
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens) })
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(count_10s_in_100) })
 						end
-						if i == tens - 1 then
-							left = left - tens
-							i = -1
-						end
-					elseif left == 7 then
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = i })
-					elseif left == 9 then
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = 8 + math.floor(i/3) })
-					elseif left < 9 then
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = left - 1 })
+					elseif count_in_10 == 7 then
+						minetest.set_node(pos, { name = "numberblocks:block", param2 = order_in_10 })
+					elseif count_in_10 == 9 then
+						minetest.set_node(pos, { name = "numberblocks:block", param2 = 8 + math.floor(order_in_10/3) })
+					else
+						minetest.set_node(pos, { name = "numberblocks:block", param2 = count_in_10 - 1 })
 					end
-					i = i + 1
 				end
 			end
 		end
@@ -172,7 +195,8 @@ local function numberblocks_restyle_blocks(nodes, count)
 		local best_dist2 = -1
 		-- find closest block at max_y
 		for x, zs in orderedPairs(nodes[max_y]) do
-			for z, node_type in orderedPairs(zs) do
+			for z, info in orderedPairs(zs) do
+				local node_type = info.t
 				if node_type == NODE_BLOCK then
 					local pos = {x = x, y = max_y, z = z};
 					local disp = vector.subtract(pos, sum_pos)
