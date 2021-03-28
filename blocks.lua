@@ -17,6 +17,7 @@ minetest.register_node("numberblocks:block", {
 	},
 	palette = "numberblocks_block_palette.png",
 	groups = { cracky = 1 },
+	drop = "numberblocks:block",
 
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -85,7 +86,8 @@ for i,info in pairs(ten_blocks) do
 			info.tile_front,
 			info.tile_front,
 		},
-		groups = { cracky = 1 },
+		groups = { cracky = 2, not_in_creative_inventory = 1 },
+		drop = "numberblocks:block",
 
 		drawtype = "nodebox",
 		paramtype = "light",
