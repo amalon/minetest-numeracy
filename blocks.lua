@@ -93,10 +93,8 @@ for i,info in pairs(ten_blocks) do
 		groups = { cracky = 2, not_in_creative_inventory = 1 },
 		drop = "numberblocks:block",
 
-		drawtype = "nodebox",
 		paramtype = "light",
 		paramtype2 = "color",
-		node_box = node_box,
 
 		on_place = numberblocks_block_on_place,
 		after_dig_node = numberblocks_block_after_dig_node,
