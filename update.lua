@@ -99,7 +99,7 @@ function find_blocks(pos)
 	return nodes, count
 end
 
-local function numberblocks_add_number(pos, number)
+local function numeracy_add_number(pos, number)
 	-- FIXME check space is unoccupied
 	if number < 10 then
 		minetest.set_node(pos, { name = "numeracy:number_centre_"..tostring(number) })
@@ -169,8 +169,8 @@ local function nodes_size(nodes, range_min, range_max)
 end
 
 -- Arbitrary sort
--- e.g. numberblocks_sort({...}, {{'x', 1}, {'y', -1}})
-local function numberblocks_sort(nodes, ordering, numbering)
+-- e.g. numeracy_sort({...}, {{'x', 1}, {'y', -1}})
+local function numeracy_sort(nodes, ordering, numbering)
 	if not ordering then
 		ordering = {}
 	end
@@ -234,7 +234,7 @@ end
 
 local dimention_names = { 'x', 'z', 'y' }
 
-local function numberblocks_size_dimentions(size)
+local function numeracy_size_dimentions(size)
 	local dimentions = 0
 	for i, d in ipairs(dimention_names) do
 		if size[d] > 0 then
@@ -245,7 +245,7 @@ local function numberblocks_size_dimentions(size)
 end
 
 -- size is 1 based
-local function numberblocks_is_triangle(nodes, size, min, max)
+local function numeracy_is_triangle(nodes, size, min, max)
 	for di, d in ipairs(dimention_names) do
 		if size[d] > 1 then
 			local d2
@@ -309,8 +309,8 @@ local function numberblocks_is_triangle(nodes, size, min, max)
 	end
 end
 
--- [numberblock][width] = { top to bottom, left to right }
-local numberblocks_rect_specials = {
+-- [count][width] = { top to bottom, left to right }
+local numeracy_rect_specials = {
 	[12] = {
 		[3] = { 8,  9, 10,
 		        6, 12,  7,
@@ -353,7 +353,7 @@ local numberblocks_rect_specials = {
 }
 
 -- transposed
-local numberblocks_tri_specials = {
+local numeracy_tri_specials = {
 	[28] = {  1,
               2,  3,
 		      4,  5,  6,
@@ -363,7 +363,7 @@ local numberblocks_tri_specials = {
 		     22, 23, 24, 25, 26, 27, 28 },
 }
 
-local numberblocks_cube_specials = {
+local numeracy_cube_specials = {
 	[3] = { -- 27
 		-- 27 is a cube, with corners and edges part of 20
 		-- Number should probably be further forward
@@ -375,17 +375,17 @@ local numberblocks_cube_specials = {
 }
 
 -- Assign an ordering to the nodes
-local function numberblocks_sort_blocks(nodes, count)
+local function numeracy_sort_blocks(nodes, count)
 	local size, min, max = nodes_size(nodes)
 
-	local dimentions = numberblocks_size_dimentions(size)
+	local dimentions = numeracy_size_dimentions(size)
 
 	-- offset by 1 for convenience, since zero based sizes are less intuitive
 	size = vector.add(size, vector.new(1, 1, 1))
 
 	if dimentions == 1 then
 		-- 1 dimentional, can't go wrong
-		numberblocks_sort(nodes)
+		numeracy_sort(nodes)
 	elseif dimentions == 2 then
 		-- 2 dimentional, this is where all the interesting stuff is
 		local d1, d2
@@ -404,16 +404,16 @@ local function numberblocks_sort_blocks(nodes, count)
 		local rectangle_class = 0
 		if count == size[d1] * size[d2] then
 			rectangle_class = 2
-			if numberblocks_rect_specials[count] then
-				if not numberblocks_rect_specials[count][size[d1]] and numberblocks_rect_specials[count][size[d2]] then
-					-- swap to match representation in numberblocks_rect_specials
+			if numeracy_rect_specials[count] then
+				if not numeracy_rect_specials[count][size[d1]] and numeracy_rect_specials[count][size[d2]] then
+					-- swap to match representation in numeracy_rect_specials
 					local tmp = d1
 					d1 = d2
 					d2 = tmp
 				end
-				if numberblocks_rect_specials[count][size[d1]] then
-					numberblocks_sort(nodes, { { d2, -1 }, { d1, 1} },
-					                  numberblocks_rect_specials[count][size[d1]])
+				if numeracy_rect_specials[count][size[d1]] then
+					numeracy_sort(nodes, { { d2, -1 }, { d1, 1} },
+					                  numeracy_rect_specials[count][size[d1]])
 					return
 				end
 			end
@@ -455,39 +455,39 @@ local function numberblocks_sort_blocks(nodes, count)
 			end
 			if d2_dir ~= 0 then
 				local numbering = nil
-				numberblocks_sort(nodes, { { dd2, d2_dir } }, numbering)
+				numeracy_sort(nodes, { { dd2, d2_dir } }, numbering)
 				return
 			end
 		end
 
 		-- triangular numbers
-		local tri_dim, tri_dir = numberblocks_is_triangle(nodes, size, min, max)
+		local tri_dim, tri_dir = numeracy_is_triangle(nodes, size, min, max)
 		if tri_dim then
-			numberblocks_sort(nodes, { { tri_dim, tri_dir } }, numberblocks_tri_specials[count])
+			numeracy_sort(nodes, { { tri_dim, tri_dir } }, numeracy_tri_specials[count])
 			return
 		end
 
-		numberblocks_sort(nodes)
+		numeracy_sort(nodes)
 	elseif dimentions == 3 then
 		-- 3 dimentional
 
 		-- Special cases
-		if numberblocks_cube_specials[size.x] and
+		if numeracy_cube_specials[size.x] and
 		   size.x == size.y and size.y == size.z and
 		   count == size.x * size.x * size.x then
-			numberblocks_sort(nodes, numberblocks_cube_specials[size.x].sorting,
-							  numberblocks_cube_specials[size.x].numbering);
+			numeracy_sort(nodes, numeracy_cube_specials[size.x].sorting,
+						  numeracy_cube_specials[size.x].numbering);
 			return
 		end
 
-		numberblocks_sort(nodes)
+		numeracy_sort(nodes)
 	end
 end
 
 -- Change the colour of blocks depending on the number of them
-local function numberblocks_restyle_blocks(nodes, count)
+local function numeracy_restyle_blocks(nodes, count)
 	if count > 0 then
-		numberblocks_sort_blocks(nodes, count)
+		numeracy_sort_blocks(nodes, count)
 	end
 
 	-- find best place for number nodes
@@ -571,11 +571,11 @@ local function numberblocks_restyle_blocks(nodes, count)
 			end
 		end
 		best_pos.y = best_pos.y + 1
-		numberblocks_add_number(best_pos, count)
+		numeracy_add_number(best_pos, count)
 	end
 end
 
-function numberblocks_block_on_place(itemstack, placer, pointed_thing)
+function numeracy_block_on_place(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
 		-- FIXME check if under is a number first and replace that
 		local pos = pointed_thing.above
@@ -590,7 +590,7 @@ function numberblocks_block_on_place(itemstack, placer, pointed_thing)
 		if success then
 			local nodes, count = find_blocks(pos)
 
-			numberblocks_restyle_blocks(nodes, count)
+			numeracy_restyle_blocks(nodes, count)
 		end
 
 		return stack, success
@@ -598,7 +598,7 @@ function numberblocks_block_on_place(itemstack, placer, pointed_thing)
 	return itemstack
 end
 
-function numberblocks_block_after_dig_node(pos, oldnode, oldmetadata, digger)
+function numeracy_block_after_dig_node(pos, oldnode, oldmetadata, digger)
 	-- Look in each direction for a broken one
 	local skips = {}
 	local positions = {}
@@ -609,8 +609,8 @@ function numberblocks_block_after_dig_node(pos, oldnode, oldmetadata, digger)
 	for i = 1, 6 do
 		if skips[i] == false then
 			local nodes, count = find_blocks(positions[i])
-			numberblocks_restyle_blocks(nodes, count)
-			-- Skip other adjacent nodes part of this numberblock
+			numeracy_restyle_blocks(nodes, count)
+			-- Skip other adjacent nodes part of this numeracy block
 			for j = i+1, 6 do
 				if nodes_test(nodes, positions[j]) ~= NODE_NONE then
 					skips[j] = true

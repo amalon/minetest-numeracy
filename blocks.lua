@@ -50,7 +50,7 @@ local node_box_ten = {
 }
 
 minetest.register_node("numeracy:block", {
-	description = "Number block",
+	description = "Numeracy block",
 	tiles = {
 		"numeracy_block_white_side.png"
 	},
@@ -63,8 +63,8 @@ minetest.register_node("numeracy:block", {
 	paramtype2 = "color",
 	node_box = node_box,
 
-	on_place = numberblocks_block_on_place,
-	after_dig_node = numberblocks_block_after_dig_node,
+	on_place = numeracy_block_on_place,
+	after_dig_node = numeracy_block_after_dig_node,
 })
 
 local ten_blocks = {
@@ -131,7 +131,7 @@ for i,info in pairs(ten_blocks) do
 	local qty = info.qty or 1
 	for j = 0,qty - 1 do
 		minetest.register_node("numeracy:block_"..tostring(i).."_"..tostring(j), {
-			description = "Number block "..tostring(i).." ("..tostring(j)..")",
+			description = "Numeracy block "..tostring(i).." ("..tostring(j)..")",
 			tiles = {
 				info.tile_side,
 				info.tile_side,
@@ -151,8 +151,8 @@ for i,info in pairs(ten_blocks) do
 			paramtype = "light",
 			paramtype2 = "color",
 
-			on_place = numberblocks_block_on_place,
-			after_dig_node = numberblocks_block_after_dig_node,
+			on_place = numeracy_block_on_place,
+			after_dig_node = numeracy_block_after_dig_node,
 		})
 	end
 end
