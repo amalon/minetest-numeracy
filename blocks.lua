@@ -1,4 +1,4 @@
-dofile(minetest.get_modpath("numberblocks") .. "/update.lua")
+dofile(minetest.get_modpath("numeracy") .. "/update.lua")
 
 -- shape of blocks, 1/16 shaved off along the edges
 local node_box = {
