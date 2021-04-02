@@ -169,12 +169,14 @@ local function numberblocks_restyle_blocks(nodes, count)
 							elseif tens_for_70 == 70 then
 								tens_for_70 = 77
 							end
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_for_70) })
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_for_70).."_0" })
 						elseif count_10s_in_100 == 90 then
 							local thirties_for_90 = math.floor(order_10s_in_100/30)
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_for_90) })
+							local tens_in_thirty = math.floor((order_10s_in_100%30) / 10)
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_for_90).."_"..tostring(tens_in_thirty) })
 						else
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(count_10s_in_100) })
+							local ten_in_100 = order_10s_in_100/10
+							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(count_10s_in_100).."_"..tostring(ten_in_100) })
 						end
 					elseif count_in_10 == 7 then
 						minetest.set_node(pos, { name = "numberblocks:block", param2 = order_in_10 })
