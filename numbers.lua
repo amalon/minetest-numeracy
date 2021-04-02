@@ -2,21 +2,21 @@
 local node_box_single_centre = {
 	type = "fixed",
 	fixed = {
-		{-0.1875, -0.375, -0.0625,  0.1875, 0.375, 0.0625},
+		{-3/16, -6/16, -1/16,  3/16, 6/16, 1/16},
 	},
 }
 -- shape of right justified single digit numbers
 local node_box_single_right = {
 	type = "fixed",
 	fixed = {
-		{0.0625, -0.375, 0,  0.4375, 0.375, 0},
+		{1/16, -6/16, 0,  7/16, 6/16, 0},
 	},
 }
 -- shape of double digit numbers
 local node_box_double = {
 	type = "fixed",
 	fixed = {
-		{-0.4375, -0.375, 0,  0.4375, 0.375, 0},
+		{-7/16, -6/16, 0,  7/16, 6/16, 0},
 	},
 }
 
