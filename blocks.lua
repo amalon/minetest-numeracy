@@ -49,14 +49,14 @@ local node_box_ten = {
 	},
 }
 
-minetest.register_node("numberblocks:block", {
+minetest.register_node("numeracy:block", {
 	description = "Number block",
 	tiles = {
 		"numeracy_block_white_side.png"
 	},
 	palette = "numeracy_block_palette.png",
 	groups = { cracky = 1 },
-	drop = "numberblocks:block",
+	drop = "numeracy:block",
 
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -130,7 +130,7 @@ local ten_blocks = {
 for i,info in pairs(ten_blocks) do
 	local qty = info.qty or 1
 	for j = 0,qty - 1 do
-		minetest.register_node("numberblocks:block_"..tostring(i).."_"..tostring(j), {
+		minetest.register_node("numeracy:block_"..tostring(i).."_"..tostring(j), {
 			description = "Number block "..tostring(i).." ("..tostring(j)..")",
 			tiles = {
 				info.tile_side,
@@ -141,12 +141,12 @@ for i,info in pairs(ten_blocks) do
 				info.tile_front,
 			},
 			groups = { cracky = 2, not_in_creative_inventory = 1 },
-			drop = "numberblocks:block",
+			drop = "numeracy:block",
 
 			drawtype = "nodebox",
 			node_box = node_box_ten,
 
-			connects_to = { "numberblocks:block_"..tostring(i).."_"..tostring(j) },
+			connects_to = { "numeracy:block_"..tostring(i).."_"..tostring(j) },
 
 			paramtype = "light",
 			paramtype2 = "color",

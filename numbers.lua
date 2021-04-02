@@ -28,7 +28,7 @@ local node_box_empty = {
 }
 
 for i = 1,9 do
-	minetest.register_node("numberblocks:number_centre_"..tostring(i), {
+	minetest.register_node("numeracy:number_centre_"..tostring(i), {
 		description = "Number "..tostring(i).." (centre)",
 		tiles = {
 			"numeracy_blank.png",
@@ -47,7 +47,7 @@ for i = 1,9 do
 		collision_box = node_box_empty,
 	})
 	for j = 0,9 do
-		minetest.register_node("numberblocks:number_"..tostring(i)..tostring(j), {
+		minetest.register_node("numeracy:number_"..tostring(i)..tostring(j), {
 			description = "Number "..tostring(i)..tostring(j),
 			tiles = {
 				"numeracy_blank.png",

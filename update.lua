@@ -38,9 +38,9 @@ function nodes_set(nodes, pos, node_type)
 end
 
 function get_node_type(node)
-	if string.sub(node.name, 1, string.len("numberblocks:block")) == "numberblocks:block" then
+	if string.sub(node.name, 1, string.len("numeracy:block")) == "numeracy:block" then
 		return NODE_BLOCK
-	elseif string.sub(node.name, 1, string.len("numberblocks:number")) == "numberblocks:number" then
+	elseif string.sub(node.name, 1, string.len("numeracy:number")) == "numeracy:number" then
 		return NODE_NUMBER
 	else
 		return NODE_NONE
@@ -102,9 +102,9 @@ end
 local function numberblocks_add_number(pos, number)
 	-- FIXME check space is unoccupied
 	if number < 10 then
-		minetest.set_node(pos, { name = "numberblocks:number_centre_"..tostring(number) })
+		minetest.set_node(pos, { name = "numeracy:number_centre_"..tostring(number) })
 	elseif number < 100 then
-		minetest.set_node(pos, { name = "numberblocks:number_"..tostring(number) })
+		minetest.set_node(pos, { name = "numeracy:number_"..tostring(number) })
 	else
 		-- TODO
 	end
@@ -529,21 +529,21 @@ local function numberblocks_restyle_blocks(nodes, count)
 							elseif tens_for_70 == 70 then
 								tens_for_70 = 77
 							end
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(tens_for_70).."_0" })
+							minetest.set_node(pos, { name = "numeracy:block_"..tostring(tens_for_70).."_0" })
 						elseif count_10s_in_100 == 90 then
 							local thirties_for_90 = math.floor(order_10s_in_100/30)
 							local tens_in_thirty = math.floor((order_10s_in_100%30) / 10)
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(90 + thirties_for_90).."_"..tostring(tens_in_thirty) })
+							minetest.set_node(pos, { name = "numeracy:block_"..tostring(90 + thirties_for_90).."_"..tostring(tens_in_thirty) })
 						else
 							local ten_in_100 = order_10s_in_100/10
-							minetest.set_node(pos, { name = "numberblocks:block_"..tostring(count_10s_in_100).."_"..tostring(ten_in_100) })
+							minetest.set_node(pos, { name = "numeracy:block_"..tostring(count_10s_in_100).."_"..tostring(ten_in_100) })
 						end
 					elseif count_in_10 == 7 then
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = order_in_10 })
+						minetest.set_node(pos, { name = "numeracy:block", param2 = order_in_10 })
 					elseif count_in_10 == 9 then
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = 8 + math.floor(order_in_10/3) })
+						minetest.set_node(pos, { name = "numeracy:block", param2 = 8 + math.floor(order_in_10/3) })
 					else
-						minetest.set_node(pos, { name = "numberblocks:block", param2 = count_in_10 - 1 })
+						minetest.set_node(pos, { name = "numeracy:block", param2 = count_in_10 - 1 })
 					end
 				end
 			end
