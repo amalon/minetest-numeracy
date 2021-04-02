@@ -20,6 +20,13 @@ local node_box_double = {
 	},
 }
 
+local node_box_empty = {
+	type = "fixed",
+	fixed = {
+		{0, 0, 0,  0, 0, 0},
+	}
+}
+
 for i = 1,9 do
 	minetest.register_node("numberblocks:number_centre_"..tostring(i), {
 		description = "Number "..tostring(i).." (centre)",
@@ -37,6 +44,7 @@ for i = 1,9 do
 		drawtype = "nodebox",
 		paramtype = "light",
 		node_box = node_box_single_centre,
+		collision_box = node_box_empty,
 	})
 	for j = 0,9 do
 		minetest.register_node("numberblocks:number_"..tostring(i)..tostring(j), {
@@ -55,6 +63,7 @@ for i = 1,9 do
 			drawtype = "nodebox",
 			paramtype = "light",
 			node_box = node_box_double,
+			collision_box = node_box_empty,
 		})
 	end
 end
