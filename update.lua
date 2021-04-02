@@ -62,7 +62,7 @@ function find_blocks(pos)
 		count = 1
 	end
 	nodes_set(nodes, pos, node_type)
-	
+
 	local unhandled = { { pos, node_type } }
 
 	-- start at the pointed node and expand out looking for more connected nodes
@@ -492,7 +492,6 @@ local function numberblocks_restyle_blocks(nodes, count)
 
 	-- find best place for number nodes
 	local max_y = -31000
-	local sum_p s = { x = 0, y = 0, z = 0 }
 	local sum_count = 0
 
 	for y, xs in orderedPairs(nodes) do
@@ -586,7 +585,7 @@ function numberblocks_block_on_place(itemstack, placer, pointed_thing)
 			minetest.remove_node(pos)
 		end
 
-		local stack, success = minetest.item_place_node(itemstack, placer, pointed_thing, param2)
+		local stack, success = minetest.item_place_node(itemstack, placer, pointed_thing)
 
 		if success then
 			local nodes, count = find_blocks(pos)
