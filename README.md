@@ -20,8 +20,7 @@ Request help (or report bugs) in the [Matrix room](https://matrix.to/#/#minetest
 Installation
 ------------
 
-Unzip the archive, rename the folder to to numeracy and place it in
-minetest/mods/minetest/
+Unzip the archive and place it in minetest/mods/minetest/
 
 (  Linux: If you have a linux system-wide installation place
 	it in ~/.minetest/mods/minetest/.  )
