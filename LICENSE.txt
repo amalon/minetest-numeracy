@@ -2,7 +2,6 @@ License for Code
 ----------------
 
 Copyright (C) 2021 James Hogan <james@albanarts.com>
-Copyright (C) 2021 Benjamin Hogan
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -21,4 +20,4 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 License for Textures, Models and Sounds
 ---------------------------------------
 
-CC-BY-SA 3.0 UNPORTED. Created by James Hogan and Benjamin Hogan
+CC-BY-SA 3.0 UNPORTED. Created by James Hogan
