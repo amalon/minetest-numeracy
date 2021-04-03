@@ -5,7 +5,7 @@ Adds blocks for exploring numeracy with children, which join together and
 change appearance depending on the number of connected blocks. Inspired by the
 kids TV programme Numberblocks.
 
-![Screenshot](screenshot.png)
+![Screenshot](docs/screenshot.jpg)
 
 Version: 0.1
 
