@@ -99,12 +99,18 @@ function find_blocks(pos)
 	return nodes, count
 end
 
-local function numeracy_add_number(pos, number)
+local function numeracy_add_number(pos, number, facedir)
 	-- FIXME check space is unoccupied
 	if number < 10 then
-		minetest.set_node(pos, { name = "numeracy:number_centre_"..tostring(number) })
+		minetest.set_node(pos, {
+			name = "numeracy:number_centre_"..tostring(number),
+			param2 = facedir
+		})
 	elseif number < 100 then
-		minetest.set_node(pos, { name = "numeracy:number_"..tostring(number) })
+		minetest.set_node(pos, {
+			name = "numeracy:number_"..tostring(number),
+			param2 = facedir
+		})
 	else
 		-- TODO
 	end
@@ -245,6 +251,8 @@ local function numeracy_size_dimentions(size)
 end
 
 -- size is 1 based
+-- returns sort dimension, sort direction
+-- returns nil on failure
 local function numeracy_is_triangle(nodes, size, min, max)
 	for di, d in ipairs(dimention_names) do
 		if size[d] > 1 then
@@ -375,7 +383,8 @@ local numeracy_cube_specials = {
 }
 
 -- Assign an ordering to the nodes
-local function numeracy_sort_blocks(nodes, count)
+-- returns facedir of blocks
+local function numeracy_sort_blocks(nodes, count, doer)
 	local size, min, max = nodes_size(nodes)
 
 	local dimentions = numeracy_size_dimentions(size)
@@ -383,9 +392,18 @@ local function numeracy_sort_blocks(nodes, count)
 	-- offset by 1 for convenience, since zero based sizes are less intuitive
 	size = vector.add(size, vector.new(1, 1, 1))
 
+	local doer_pos = doer:get_pos()
+	local doer_dir = vector.subtract(vector.divide(vector.add(min, max), 2), doer_pos)
+	local facedir = minetest.dir_to_facedir(doer_dir)
+
 	if dimentions == 1 then
 		-- 1 dimentional, can't go wrong
 		numeracy_sort(nodes)
+		if size.x > 1 then
+			doer_dir.x = 0
+		elseif size.z > 1 then
+			doer_dir.z = 0
+		end
 	elseif dimentions == 2 then
 		-- 2 dimentional, this is where all the interesting stuff is
 		local d1, d2
@@ -398,6 +416,11 @@ local function numeracy_sort_blocks(nodes, count)
 		else
 			d1 = 'x'
 			d2 = 'y'
+		end
+		if size.y > 1 then
+			doer_dir[d1] = 0
+			doer_dir[d2] = 0
+			facedir = minetest.dir_to_facedir(doer_dir)
 		end
 
 		-- rectangles
@@ -414,7 +437,7 @@ local function numeracy_sort_blocks(nodes, count)
 				if numeracy_rect_specials[count][size[d1]] then
 					numeracy_sort(nodes, { { d2, -1 }, { d1, 1} },
 					                  numeracy_rect_specials[count][size[d1]])
-					return
+					return facedir
 				end
 			end
 		end
@@ -456,7 +479,7 @@ local function numeracy_sort_blocks(nodes, count)
 			if d2_dir ~= 0 then
 				local numbering = nil
 				numeracy_sort(nodes, { { dd2, d2_dir } }, numbering)
-				return
+				return facedir
 			end
 		end
 
@@ -464,7 +487,7 @@ local function numeracy_sort_blocks(nodes, count)
 		local tri_dim, tri_dir = numeracy_is_triangle(nodes, size, min, max)
 		if tri_dim then
 			numeracy_sort(nodes, { { tri_dim, tri_dir } }, numeracy_tri_specials[count])
-			return
+			return facedir
 		end
 
 		numeracy_sort(nodes)
@@ -477,17 +500,19 @@ local function numeracy_sort_blocks(nodes, count)
 		   count == size.x * size.x * size.x then
 			numeracy_sort(nodes, numeracy_cube_specials[size.x].sorting,
 						  numeracy_cube_specials[size.x].numbering);
-			return
+			return facedir
 		end
 
 		numeracy_sort(nodes)
 	end
+	return facedir
 end
 
 -- Change the colour of blocks depending on the number of them
-local function numeracy_restyle_blocks(nodes, count)
+local function numeracy_restyle_blocks(nodes, count, doer)
+	local facedir = 0
 	if count > 0 then
-		numeracy_sort_blocks(nodes, count)
+		facedir = numeracy_sort_blocks(nodes, count, doer)
 	end
 
 	-- find best place for number nodes
@@ -530,14 +555,23 @@ local function numeracy_restyle_blocks(nodes, count)
 							elseif tens_for_70 == 70 then
 								tens_for_70 = 77
 							end
-							minetest.set_node(pos, { name = "numeracy:block_"..tostring(tens_for_70).."_0" })
+							minetest.set_node(pos, {
+								name = "numeracy:block_"..tostring(tens_for_70).."_0",
+								param2 = facedir
+							})
 						elseif count_10s_in_100 == 90 then
 							local thirties_for_90 = math.floor(order_10s_in_100/30)
 							local tens_in_thirty = math.floor((order_10s_in_100%30) / 10)
-							minetest.set_node(pos, { name = "numeracy:block_"..tostring(90 + thirties_for_90).."_"..tostring(tens_in_thirty) })
+							minetest.set_node(pos, {
+								name = "numeracy:block_"..tostring(90 + thirties_for_90).."_"..tostring(tens_in_thirty),
+								param2 = facedir
+							})
 						else
 							local ten_in_100 = order_10s_in_100/10
-							minetest.set_node(pos, { name = "numeracy:block_"..tostring(count_10s_in_100).."_"..tostring(ten_in_100) })
+							minetest.set_node(pos, {
+								name = "numeracy:block_"..tostring(count_10s_in_100).."_"..tostring(ten_in_100),
+								param2 = facedir
+							})
 						end
 					elseif count_in_10 == 7 then
 						minetest.set_node(pos, { name = "numeracy:block", param2 = order_in_10 })
@@ -572,7 +606,7 @@ local function numeracy_restyle_blocks(nodes, count)
 			end
 		end
 		best_pos.y = best_pos.y + 1
-		numeracy_add_number(best_pos, count)
+		numeracy_add_number(best_pos, count, facedir)
 	end
 end
 
@@ -591,7 +625,7 @@ function numeracy_block_on_place(itemstack, placer, pointed_thing)
 		if success then
 			local nodes, count = find_blocks(pos)
 
-			numeracy_restyle_blocks(nodes, count)
+			numeracy_restyle_blocks(nodes, count, placer)
 		end
 
 		return stack, success
@@ -610,7 +644,7 @@ function numeracy_block_after_dig_node(pos, oldnode, oldmetadata, digger)
 	for i = 1, 6 do
 		if skips[i] == false then
 			local nodes, count = find_blocks(positions[i])
-			numeracy_restyle_blocks(nodes, count)
+			numeracy_restyle_blocks(nodes, count, digger)
 			-- Skip other adjacent nodes part of this numeracy block
 			for j = i+1, 6 do
 				if nodes_test(nodes, positions[j]) ~= NODE_NONE then

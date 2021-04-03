@@ -42,8 +42,10 @@ for i = 1,9 do
 		groups = { cracky = 2, not_in_creative_inventory = 1 },
 		drop = "",
 
-		drawtype = "nodebox",
 		paramtype = "light",
+		paramtype2 = "facedir",
+
+		drawtype = "nodebox",
 		node_box = node_box_single_centre,
 		collision_box = node_box_empty,
 	})
@@ -62,8 +64,10 @@ for i = 1,9 do
 			groups = { cracky = 2, not_in_creative_inventory = 1 },
 			drop = "",
 
-			drawtype = "nodebox",
 			paramtype = "light",
+			paramtype2 = "facedir",
+
+			drawtype = "nodebox",
 			node_box = node_box_double,
 			collision_box = node_box_empty,
 		})

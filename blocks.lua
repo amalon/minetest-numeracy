@@ -135,7 +135,7 @@ for i,info in pairs(ten_blocks) do
 			connects_to = { "numeracy:block_"..tostring(i).."_"..tostring(j) },
 
 			paramtype = "light",
-			paramtype2 = "color",
+			paramtype2 = "facedir",
 
 			on_place = numeracy_block_on_place,
 			after_dig_node = numeracy_block_after_dig_node,
