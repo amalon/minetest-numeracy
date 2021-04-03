@@ -38,6 +38,7 @@ for i = 1,9 do
 			"numeracy_blank.png^[combine:8x16:4,0=numeracy_number_"..tostring(i)..".png^[transformFX",
 			"numeracy_blank.png^[combine:8x16:4,0=numeracy_number_"..tostring(i)..".png",
 		},
+		use_texture_alpha = 'clip',
 		groups = { cracky = 2, not_in_creative_inventory = 1 },
 		drop = "",
 
@@ -57,6 +58,7 @@ for i = 1,9 do
 				"numeracy_blank.png^[combine:8x16:0,0=numeracy_number_"..tostring(i)..".png:8,0=numeracy_number_"..tostring(j)..".png^[transformFX",
 				"numeracy_blank.png^[combine:8x16:0,0=numeracy_number_"..tostring(i)..".png:8,0=numeracy_number_"..tostring(j)..".png",
 			},
+			use_texture_alpha = 'clip',
 			groups = { cracky = 2, not_in_creative_inventory = 1 },
 			drop = "",
 
