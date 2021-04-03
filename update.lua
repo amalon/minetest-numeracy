@@ -492,6 +492,7 @@ local function numeracy_restyle_blocks(nodes, count)
 
 	-- find best place for number nodes
 	local max_y = -31000
+	local sum_pos = { x = 0, y = 0, z = 0 }
 	local sum_count = 0
 
 	for y, xs in orderedPairs(nodes) do
