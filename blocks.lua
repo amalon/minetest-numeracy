@@ -10,42 +10,28 @@ local node_box = {
 	},
 }
 
+local ten_min = 7/16
+local ten_sur = 7.9/16
+local ten_max = 9/16
 local node_box_ten = {
 	type = "connected",
-	fixed = {
-		{-7/16, -7/16, -7/16,  7/16, 7/16, 7/16},
-	},
-	connect_top = {
-		{-7/16,  7/16, -7/16,   7/16,  8/16, 7/16},
-	},
-	connect_bottom = {
-		{-7/16, -8/16, -7/16,   7/16, -7/16, 7/16},
-	},
-	connect_left = {
-		{-8/16, -7/16, -7/16,  -7/16,  7/16, 7/16},
-	},
-	connect_right = {
-		{ 7/16, -7/16, -7/16,   8/16,  7/16, 7/16},
-	},
 	disconnected_top = {
-		{-8/16, 7/16,  7/16,   8/16, 8/16,  8/16},
-		{-8/16, 7/16, -8/16,   8/16, 8/16, -7/16},
-		{-8/16, 7/16, -7/16,  -7/16, 8/16,  7/16},
-		{ 7/16, 7/16, -7/16,   8/16, 8/16,  7/16},
+		{-ten_max,  ten_min, -ten_max,   ten_max,  ten_sur,  ten_max},
 	},
 	disconnected_bottom = {
-		{-8/16, -8/16,  7/16,   8/16, -7/16,  8/16},
-		{-8/16, -8/16, -8/16,   8/16, -7/16, -7/16},
-		{-8/16, -8/16, -7/16,  -7/16, -7/16,  7/16},
-		{ 7/16, -8/16, -7/16,   8/16, -7/16,  7/16},
+		{-ten_max, -ten_sur, -ten_max,   ten_max, -ten_min,  ten_max},
 	},
 	disconnected_left = {
-		{-8/16, -8/16,  7/16,  -7/16,  8/16,  8/16},
-		{-8/16, -8/16, -8/16,  -7/16,  8/16, -7/16},
+		{-ten_sur, -ten_max, -ten_max,  -ten_min,  ten_max,  ten_max},
 	},
 	disconnected_right = {
-		{ 7/16, -8/16,  7/16,   8/16,  8/16,  8/16},
-		{ 7/16, -8/16, -8/16,   8/16,  8/16, -7/16},
+		{ ten_min, -ten_max, -ten_max,   ten_sur,  ten_max,  ten_max},
+	},
+	disconnected_front = {
+		{-ten_max, -ten_max, -ten_sur,   ten_max,  ten_max, -ten_min},
+	},
+	disconnected_back = {
+		{-ten_max, -ten_max,  ten_min,   ten_max,  ten_max,  ten_sur},
 	},
 }
 
