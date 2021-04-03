@@ -1,9 +1,9 @@
 Numeracy Mod for Minetest
 =========================
 
-Adds blocks for exploring numeracy with children, which change appearance
-depending on the number of connected blocks, inspired by the kids TV programme
-Numberblocks.
+Adds blocks for exploring numeracy with children, which join together and
+change appearance depending on the number of connected blocks. Inspired by the
+kids TV programme Numberblocks.
 
 Version: 0.1
 Licence: LGPL 2.1 or later, CC-BY-SA 3.0 UNPORTED (see LICENSE.txt)
