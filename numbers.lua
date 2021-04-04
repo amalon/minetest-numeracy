@@ -20,13 +20,6 @@ local node_box_double = {
 	},
 }
 
-local node_box_empty = {
-	type = "fixed",
-	fixed = {
-		{0, 0, 0,  0, 0, 0},
-	}
-}
-
 for i = 1,9 do
 	minetest.register_node("numeracy:number_centre_"..tostring(i), {
 		description = "Number "..tostring(i).." (centre)",
@@ -42,12 +35,14 @@ for i = 1,9 do
 		groups = { cracky = 2, not_in_creative_inventory = 1 },
 		drop = "",
 
+		pointable = false,
+		walkable = false,
+
 		paramtype = "light",
 		paramtype2 = "facedir",
 
 		drawtype = "nodebox",
 		node_box = node_box_single_centre,
-		collision_box = node_box_empty,
 	})
 	for j = 0,9 do
 		minetest.register_node("numeracy:number_"..tostring(i)..tostring(j), {
@@ -63,13 +58,14 @@ for i = 1,9 do
 			use_texture_alpha = 'clip',
 			groups = { cracky = 2, not_in_creative_inventory = 1 },
 			drop = "",
+			pointable = false,
+			walkable = false,
 
 			paramtype = "light",
 			paramtype2 = "facedir",
 
 			drawtype = "nodebox",
 			node_box = node_box_double,
-			collision_box = node_box_empty,
 		})
 	end
 end
