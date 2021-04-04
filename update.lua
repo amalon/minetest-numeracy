@@ -100,7 +100,6 @@ function find_blocks(pos)
 end
 
 local function numeracy_add_number(pos, number, facedir)
-	-- FIXME check space is unoccupied
 	if number < 10 then
 		minetest.set_node(pos, {
 			name = "numeracy:number_centre_"..tostring(number),
@@ -609,6 +608,7 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 	if sum_count > 0 then
 		-- find average XZ of max Y blocks
 		sum_pos = vector.divide(sum_pos, sum_count)
+		local found_best = false
 		local best_pos
 		local best_dist2 = -1
 		-- find closest block at max_y
@@ -616,18 +616,26 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 			for z, info in orderedPairs(zs) do
 				local node_type = info.t
 				if node_type == NODE_BLOCK then
-					local pos = {x = x, y = max_y, z = z};
-					local disp = vector.subtract(pos, sum_pos)
-					local dist2 = vector.dot(disp, disp)
-					if best_dist2 < 0 or dist2 < best_dist2 then
-						best_pos = pos
-						best_dist2 = dist2
+					-- Check space above is unoccupied
+					local pos_above = {x = x, y = max_y+1, z = z}
+					if nodes_test(nodes, pos_above) == NODE_NUMBER or
+					   minetest.get_node(pos_above).name == "air" then
+					   local pos = {x = x, y = max_y, z = z}
+					   local disp = vector.subtract(pos, sum_pos)
+					   local dist2 = vector.dot(disp, disp)
+					   if best_dist2 < 0 or dist2 < best_dist2 then
+						   best_pos = pos
+						   best_dist2 = dist2
+						   found_best = true
+					   end
 					end
 				end
 			end
 		end
-		best_pos.y = best_pos.y + 1
-		numeracy_add_number(best_pos, count, facedir)
+		if found_best then
+			best_pos.y = best_pos.y + 1
+			numeracy_add_number(best_pos, count, facedir)
+		end
 	end
 end
 
