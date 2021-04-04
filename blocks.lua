@@ -41,6 +41,7 @@ minetest.register_node("numeracy:block", {
 		"numeracy_block_white_side.png"
 	},
 	palette = "numeracy_block_palette.png",
+	color = "#FF002B",
 	groups = { cracky = 1 },
 	drop = "numeracy:block",
 
