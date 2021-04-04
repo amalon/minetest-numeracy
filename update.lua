@@ -376,7 +376,7 @@ local numeracy_cube_specials = {
 		-- Number should probably be further forward
 		sorting = { { 'y', 1 }, { 'x', 1 }, { 'z', 1 } },
 		numbering = {  1,  2,  3,   4, 26,  5,   6,  7,  8, 	-- bottom
-		               9, 22, 10,  23, 27, 24,  11, 25, 12, 	-- mid
+		               9, 22, 11,  23, 27, 24,  12, 25, 10, 	-- mid
 		              13, 14, 15,  16, 21, 17,  18, 19, 20 }	-- top
 	},
 }
