@@ -11,8 +11,6 @@ Version: 0.1
 
 Licence: LGPL 2.1 or later, CC-BY-SA 3.0 UNPORTED (see LICENSE.txt)
 
-Dependencies: default mod (found in minetest\_game)
-
 Report bugs to the [github repository](https://github.com/amalon/minetest-numeracy/issues).
 
 Request help (or report bugs) in the [Matrix room](https://matrix.to/#/#minetest-numeracy:hoganfam.uk?via=hoganfam.uk).
