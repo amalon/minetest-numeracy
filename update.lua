@@ -382,6 +382,26 @@ local numeracy_cube_specials = {
 	},
 }
 
+-- We only need rotation around y+ axis for now
+local numeracy_rotation = {
+	[0] = { x = { 'x',  1 }, y = { 'y',  1 }, z = { 'z',  1 } },
+	[1] = { x = { 'z', -1 }, y = { 'y',  1 }, z = { 'x',  1 } },
+	[2] = { x = { 'x', -1 }, y = { 'y',  1 }, z = { 'z', -1 } },
+	[3] = { x = { 'z',  1 }, y = { 'y',  1 }, z = { 'x', -1 } },
+}
+local function numeracy_rotate_sorting(sorting, facedir)
+	local new_sorting = {}
+	for i, s in ipairs(sorting) do
+		local new_s = { s[1], s[2] }
+		if numeracy_rotation[facedir] then
+			new_s[1] = numeracy_rotation[facedir][s[1]][1]
+			new_s[2] = s[2] * numeracy_rotation[facedir][s[1]][2]
+		end
+		new_sorting[i] = new_s
+	end
+	return new_sorting
+end
+
 -- Assign an ordering to the nodes
 -- returns facedir of blocks
 local function numeracy_sort_blocks(nodes, count, doer)
@@ -499,8 +519,8 @@ local function numeracy_sort_blocks(nodes, count, doer)
 		if numeracy_cube_specials[size.x] and
 		   size.x == size.y and size.y == size.z and
 		   count == size.x * size.x * size.x then
-			numeracy_sort(nodes, numeracy_cube_specials[size.x].sorting,
-						  numeracy_cube_specials[size.x].numbering);
+			local s = numeracy_cube_specials[size.x]
+			numeracy_sort(nodes, numeracy_rotate_sorting(s.sorting, facedir), s.numbering);
 			return facedir
 		end
 
