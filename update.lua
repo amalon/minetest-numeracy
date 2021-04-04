@@ -132,44 +132,44 @@ local function nodes_size(nodes, range_min, range_max)
 	for y, xs in pairs(nodes) do
 		if (range_min.y == nil or y >= range_min.y) and
 		   (range_max.y == nil or y <= range_max.y) then
-		   for x, zs in pairs(xs) do
-			   if (range_min.x == nil or x >= range_min.x) and
+			for x, zs in pairs(xs) do
+				if (range_min.x == nil or x >= range_min.x) and
 				   (range_max.x == nil or x <= range_max.x) then
-				   for z, info in pairs(zs) do
-					   if (range_min.z == nil or z >= range_min.z) and
+					for z, info in pairs(zs) do
+						if (range_min.z == nil or z >= range_min.z) and
 						   (range_max.z == nil or z <= range_max.z) then
-						   if info.t == NODE_BLOCK then
-							   count = count + 1
-							   if first then
-								   min = vector.new(x, y, z)
-								   max = vector.new(min)
-								   first = false
-							   else
-								   if z < min.z then
-									   min.z = z
-								   end
-								   if z > max.z then
-									   max.z = z
-								   end
-								   if x < min.x then
-									   min.x = x
-								   end
-								   if x > max.x then
-									   max.x = x
-								   end
-								   if y < min.y then
-									   min.y = y
-								   end
-								   if y > max.y then
-									   max.y = y
-								   end
-							   end
-						   end
-					   end
-				   end
-			   end
-		   end
-	   end
+							if info.t == NODE_BLOCK then
+								count = count + 1
+								if first then
+									min = vector.new(x, y, z)
+									max = vector.new(min)
+									first = false
+								else
+									if z < min.z then
+										min.z = z
+									end
+									if z > max.z then
+										max.z = z
+									end
+									if x < min.x then
+										min.x = x
+									end
+									if x > max.x then
+										max.x = x
+									end
+									if y < min.y then
+										min.y = y
+									end
+									if y > max.y then
+										max.y = y
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
 	end
 	return vector.subtract(max, min), min, max, count
 end
@@ -281,14 +281,14 @@ local function numeracy_is_triangle(nodes, size, min, max)
 				if directions[2][1] or directions[2][2] then
 					if (i ~= max[d] and size2[d2] ~= i-min[d]) or
 					   size2[d2] > i-min[d] then
-					    directions[2] = { false, false }
+						directions[2] = { false, false }
 					end
 				end
 				-- check if not growing d2 with decreasing d
 				if directions[1][1] or directions[1][2] then
 					if (i ~= min[d] and size2[d2] ~= max[d]-i) or
 					   size2[d2] > max[d]-i then
-					    directions[1] = { false, false }
+						directions[1] = { false, false }
 					end
 				end
 				-- check if max d2 is aligned
@@ -322,8 +322,8 @@ local numeracy_rect_specials = {
 	[12] = {
 		[3] = { 8,  9, 10,
 		        6, 12,  7,
-				4, 11,  5,
-				1,  2,  3 },
+		        4, 11,  5,
+		        1,  2,  3 },
 	},
 	[16] = {
 		[4] = {  7,  8,  9, 10,
@@ -341,34 +341,34 @@ local numeracy_rect_specials = {
 	},
 	[21] = {
 		[3] = { 18, 19, 20,
-			    15, 16, 17,
-			    12, 13, 14,
-			    11, 21, 10,
-			     7,  8,  9,
-			     4,  5,  6,
-			     1,  2,  3 },
+		        15, 16, 17,
+		        12, 13, 14,
+		        11, 21, 10,
+		         7,  8,  9,
+		         4,  5,  6,
+		         1,  2,  3 },
 	},
 	[24] = {
 		[3] = { 18, 19, 20,
-			    15, 16, 17,
-			    13, 24, 14,
-			    11, 23, 12,
-			     9, 22, 10,
-			     7, 21,  8,
-			     4,  5,  6,
-			     1,  2,  3 },
+		        15, 16, 17,
+		        13, 24, 14,
+		        11, 23, 12,
+		         9, 22, 10,
+		         7, 21,  8,
+		         4,  5,  6,
+		         1,  2,  3 },
 	},
 }
 
 -- transposed
 local numeracy_tri_specials = {
 	[28] = {  1,
-              2,  3,
-		      4,  5,  6,
-		      7,  8,  9, 10,
-		     11, 12, 13, 14, 15,
-		     21, 16, 17, 18, 19, 20,
-		     22, 23, 24, 25, 26, 27, 28 },
+	          2,  3,
+	          4,  5,  6,
+	          7,  8,  9, 10,
+	         11, 12, 13, 14, 15,
+	         21, 16, 17, 18, 19, 20,
+	         22, 23, 24, 25, 26, 27, 28 },
 }
 
 local numeracy_cube_specials = {
@@ -376,9 +376,9 @@ local numeracy_cube_specials = {
 		-- 27 is a cube, with corners and edges part of 20
 		-- Number should probably be further forward
 		sorting = { { 'y', 1 }, { 'x', 1 }, { 'z', 1 } },
-		numbering = {  1,  2,  3,   4, 26,  5,   6,  7,  8,		-- bottom
-					   9, 22, 10,  23, 27, 24,  11, 25, 12,		-- mid
-					  13, 14, 15,  16, 21, 17,  18, 19, 20 }	-- top
+		numbering = {  1,  2,  3,   4, 26,  5,   6,  7,  8, 	-- bottom
+		               9, 22, 10,  23, 27, 24,  11, 25, 12, 	-- mid
+		              13, 14, 15,  16, 21, 17,  18, 19, 20 }	-- top
 	},
 }
 
