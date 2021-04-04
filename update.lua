@@ -404,6 +404,7 @@ local function numeracy_sort_blocks(nodes, count, doer)
 		elseif size.z > 1 then
 			doer_dir.z = 0
 		end
+		facedir = minetest.dir_to_facedir(doer_dir)
 	elseif dimentions == 2 then
 		-- 2 dimentional, this is where all the interesting stuff is
 		local d1, d2
