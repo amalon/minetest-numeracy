@@ -5,38 +5,38 @@ table.
 Modified for reverse sorting by James Hogan <james@albanarts.com>
 ]]
 
-function __genOrderedIndex( t, dir )
-    local orderedIndex = {}
+local function __gen_ordered_index( t, dir )
+    local ordered_index = {}
     for key in pairs(t) do
-        table.insert( orderedIndex, key )
+        table.insert( ordered_index, key )
     end
     if dir > 0 then
-        table.sort( orderedIndex )
+        table.sort( ordered_index )
     else
         -- reverse sort
-        table.sort( orderedIndex, function(a,b)
+        table.sort( ordered_index, function(a,b)
             return a > b
         end)
     end
-    return orderedIndex
+    return ordered_index
 end
 
-function orderedNext(t, state, dir)
+local function ordered_next(t, state, dir)
     -- Equivalent of the next function, but returns the keys in the alphabetic
     -- order. We use a temporary ordered key table that is stored in the
     -- table being iterated.
 
     local key = nil
-    --print("orderedNext: state = "..tostring(state) )
+    --print("ordered_next: state = "..tostring(state) )
     if state == nil then
         -- the first time, generate the index
-        t.__orderedIndex = __genOrderedIndex( t, dir or 1 )
-        key = t.__orderedIndex[1]
+        t.__ordered_index = __gen_ordered_index( t, dir or 1 )
+        key = t.__ordered_index[1]
     else
         -- fetch the next value
-        for i = 1,table.getn(t.__orderedIndex) do
-            if t.__orderedIndex[i] == state then
-                key = t.__orderedIndex[i+1]
+        for i = 1,table.getn(t.__ordered_index) do
+            if t.__ordered_index[i] == state then
+                key = t.__ordered_index[i+1]
             end
         end
     end
@@ -46,20 +46,20 @@ function orderedNext(t, state, dir)
     end
 
     -- no more value to return, cleanup
-    t.__orderedIndex = nil
+    t.__ordered_index = nil
     return
 end
 
-function orderedNextReverse(t, state)
-	return orderedNext(t, state, -1)
+local function ordered_next_reverse(t, state)
+	return ordered_next(t, state, -1)
 end
 
-function orderedPairs(t, dir)
+function numeracy_ordered_pairs(t, dir)
     -- Equivalent of the pairs() function on tables. Allows to iterate
     -- in order
     if (dir or 1) >= 0 then
-        return orderedNext, t, nil
+        return ordered_next, t, nil
     else
-        return orderedNextReverse, t, nil
+        return ordered_next_reverse, t, nil
     end
 end

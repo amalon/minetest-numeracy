@@ -16,14 +16,14 @@ local adjacent_vectors = {
 	{ x =  0, y = -1, z =  0 },
 }
 
-NODE_NONE   = 0
-NODE_BLOCK  = 1
-NODE_NUMBER = 2
+local NODE_NONE   = 0
+local NODE_BLOCK  = 1
+local NODE_NUMBER = 2
 
 -- Maximum supported number
 local max_number = 999
 
-function nodes_test(nodes, pos)
+local function nodes_test(nodes, pos)
 	if not nodes[pos.y] then
 		return NODE_NONE
 	end
@@ -36,7 +36,7 @@ function nodes_test(nodes, pos)
 	return nodes[pos.y][pos.x][pos.z].t
 end
 
-function nodes_set(nodes, pos, node_type)
+local function nodes_set(nodes, pos, node_type)
 	if not nodes[pos.y] then
 		nodes[pos.y] = {}
 	end
@@ -49,7 +49,7 @@ function nodes_set(nodes, pos, node_type)
 	}
 end
 
-function get_node_type(node)
+local function get_node_type(node)
 	if string.sub(node.name, 1, string.len("numeracy:block")) == "numeracy:block" then
 		return NODE_BLOCK
 	elseif string.sub(node.name, 1, string.len("numeracy:number")) == "numeracy:number" then
@@ -76,7 +76,7 @@ local function adj_node_connected(node_type, adj, adj_node_type, param2)
 			adj_number_lookup[param2] and adj_number_lookup[param2] == adj)
 end
 
-function find_blocks(pos)
+local function find_blocks(pos)
 	-- Construct a list of block nodes
 	local nodes = {}
 
@@ -309,9 +309,9 @@ local function numeracy_sort(nodes, ordering, numbering)
 		end
 	end
 	local i = 0
-	for a, bs in orderedPairs(snodes, ordering[1][2]) do
-		for b, cs in orderedPairs(bs, ordering[2][2]) do
-			for c in orderedPairs(cs, ordering[3][2]) do
+	for a, bs in numeracy_ordered_pairs(snodes, ordering[1][2]) do
+		for b, cs in numeracy_ordered_pairs(bs, ordering[2][2]) do
+			for c in numeracy_ordered_pairs(cs, ordering[3][2]) do
 				local spos = { a, b, c }
 				local pos = {
 					x = spos[reverse_ordering.x],
@@ -632,9 +632,9 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 	local sum_pos = { x = 0, y = 0, z = 0 }
 	local sum_count = 0
 
-	for y, xs in orderedPairs(nodes) do
-		for x, zs in orderedPairs(xs) do
-			for z, info in orderedPairs(zs) do
+	for y, xs in numeracy_ordered_pairs(nodes) do
+		for x, zs in numeracy_ordered_pairs(xs) do
+			for z, info in numeracy_ordered_pairs(zs) do
 				local node_type = info.t
 				local pos = {x = x, y = y, z = z};
 				if node_type == NODE_NUMBER then
@@ -745,8 +745,8 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 		local best_pos
 		local best_dist2 = -1
 		-- find closest block at max_y
-		for x, zs in orderedPairs(nodes[max_y]) do
-			for z, info in orderedPairs(zs) do
+		for x, zs in numeracy_ordered_pairs(nodes[max_y]) do
+			for z, info in numeracy_ordered_pairs(zs) do
 				local node_type = info.t
 				if node_type == NODE_BLOCK then
 					-- Check space above is unoccupied
