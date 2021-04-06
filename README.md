@@ -1,3 +1,6 @@
+[![ContentDB](https://content.minetest.net/packages/amalon/numeracy/shields/title/)](https://content.minetest.net/packages/amalon/numeracy/)
+[![ContentDB](https://content.minetest.net/packages/amalon/numeracy/shields/downloads/)](https://content.minetest.net/packages/amalon/numeracy/)
+
 Numeracy Mod for Minetest
 =========================
 
@@ -13,9 +16,10 @@ Licence: LGPL 2.1 or later, CC-BY-SA 3.0 UNPORTED (see LICENSE.txt)
 
 Dependencies: none
 
-Report bugs to the [github repository](https://github.com/amalon/minetest-numeracy/issues).
-
-Request help (or report bugs) in the [Matrix room](https://matrix.to/#/#minetest-numeracy:hoganfam.uk?via=hoganfam.uk).
+ - [ContentDB](https://content.minetest.net/packages/amalon/numeracy/)
+ - [Forum topic](https://forum.minetest.net/viewtopic.php?t=26516)
+ - [Report bugs](https://github.com/amalon/minetest-numeracy/issues)
+ - [Matrix room](https://matrix.to/#/#minetest-numeracy:hoganfam.uk?via=hoganfam.uk)
 
 Installation
 ------------
