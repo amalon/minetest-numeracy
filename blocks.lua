@@ -10,11 +10,39 @@ local node_box = {
 	},
 }
 
-local ten_min = 7/16
-local ten_sur = 7.9/16
-local ten_max = 9/16
+local ten_min = 6/16
+local ten_sur = 7/16
+local ten_max = 8/16
 local node_box_ten = {
 	type = "connected",
+
+	-- slightly small cube
+	fixed = {
+		{-ten_sur, -ten_sur, -ten_sur,   ten_sur,  ten_sur,  ten_sur},
+	},
+
+	-- extend sides towards neighbouring connections
+	connect_top = {
+		{-ten_sur,  ten_sur, -ten_sur,   ten_sur,  ten_max,  ten_sur},
+	},
+	connect_bottom = {
+		{-ten_sur, -ten_max, -ten_sur,   ten_sur, -ten_sur,  ten_sur},
+	},
+	connect_left = {
+		{-ten_max, -ten_sur, -ten_sur,  -ten_sur,  ten_sur,  ten_sur},
+	},
+	connect_right = {
+		{ ten_sur, -ten_sur, -ten_sur,   ten_max,  ten_sur,  ten_sur},
+	},
+	connect_front = {
+		{-ten_sur, -ten_sur, -ten_max,   ten_sur,  ten_sur, -ten_sur},
+	},
+	connect_back = {
+		{-ten_sur, -ten_sur,  ten_sur,   ten_sur,  ten_sur,  ten_max},
+	},
+
+	-- extend unconnected faces tangentially to show a slightly ugly but
+	-- functional border around the groups of blocks
 	disconnected_top = {
 		{-ten_max,  ten_min, -ten_max,   ten_max,  ten_sur,  ten_max},
 	},
