@@ -51,7 +51,6 @@ Roadmap
 -------
 
 Some features I may add to this mod in future include:
- - Extend beyond 99 blocks in a group
  - Add tools to make things easier and faster, e.g.:
    - Extend the group of blocks in the chosen direction
    - Rearrange groups of blocks to explore factors and other properties

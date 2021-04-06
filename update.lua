@@ -1,15 +1,27 @@
+local ADJ_LEFT  = 1
+local ADJ_RIGHT = 2
+local ADJ_FRONT = 3
+local ADJ_BACK  = 4
+local ADJ_UP    = 5
+local ADJ_DOWN  = 6
+
+local ADJ_HORIZ = 4
+
 local adjacent_vectors = {
 	{ x = -1, y =  0, z =  0 },
 	{ x =  1, y =  0, z =  0 },
-	{ x =  0, y = -1, z =  0 },
-	{ x =  0, y =  1, z =  0 },
 	{ x =  0, y =  0, z = -1 },
-	{ x =  0, y =  0, z =  1 }
+	{ x =  0, y =  0, z =  1 },
+	{ x =  0, y =  1, z =  0 },
+	{ x =  0, y = -1, z =  0 },
 }
 
 NODE_NONE   = 0
 NODE_BLOCK  = 1
 NODE_NUMBER = 2
+
+-- Maximum supported number
+local max_number = 999
 
 function nodes_test(nodes, pos)
 	if not nodes[pos.y] then
@@ -47,6 +59,23 @@ function get_node_type(node)
 	end
 end
 
+-- index by param2, get adj
+local adj_number_lookup = {
+	[32 + 0] = ADJ_LEFT,  [64 + 0] = ADJ_RIGHT,
+	[32 + 1] = ADJ_BACK,  [64 + 1] = ADJ_FRONT,
+	[32 + 2] = ADJ_RIGHT, [64 + 2] = ADJ_LEFT,
+	[32 + 3] = ADJ_FRONT, [64 + 3] = ADJ_BACK,
+}
+local function adj_node_connected(node_type, adj, adj_node_type, param2)
+			-- block to block
+	return (node_type == NODE_BLOCK and adj_node_type == NODE_BLOCK) or
+			-- upwards, block to number
+			(adj == ADJ_UP and node_type == NODE_BLOCK and adj_node_type == NODE_NUMBER) or
+			-- horizontally, to number
+			(adj <= ADJ_HORIZ and node_type ~= NODE_NONE and adj_node_type == NODE_NUMBER and
+			adj_number_lookup[param2] and adj_number_lookup[param2] == adj)
+end
+
 function find_blocks(pos)
 	-- Construct a list of block nodes
 	local nodes = {}
@@ -79,16 +108,19 @@ function find_blocks(pos)
 			if nodes_test(nodes, pos2) == NODE_NONE then
 				node = minetest.get_node(pos2)
 				local adj_node_type = get_node_type(node);
-				if (node_type == NODE_BLOCK and adj_node_type == NODE_BLOCK) or
-				   (i == 3 and node_type == NODE_NUMBER and adj_node_type == NODE_BLOCK) or
-				   (i == 4 and node_type == NODE_BLOCK and adj_node_type == NODE_NUMBER) then
-					nodes_set(nodes, pos2, adj_node_type)
-					table.insert(unhandled, { pos2, adj_node_type })
+				if adj_node_connected(node_type, i, adj_node_type, node.param2) then
 					if adj_node_type == NODE_BLOCK then
 						count = count + 1
 					end
+					-- don't exceed max_number blocks
+					if adj_node_type == NODE_NUMBER or count <= max_number then
+						nodes_set(nodes, pos2, adj_node_type)
+					end
+					table.insert(unhandled, { pos2, adj_node_type })
 					allcount = allcount + 1
-					if allcount > 100 then
+					-- allow enough extra numbers to be detected for them to be
+					-- removed beyond max_number
+					if allcount >= max_number + 4 then
 						return nodes, count
 					end
 				end
@@ -99,20 +131,80 @@ function find_blocks(pos)
 	return nodes, count
 end
 
-local function numeracy_add_number(pos, number, facedir)
-	if number < 10 then
+-- pad = nil: center
+-- pad = ' ': right
+-- pad = '0': zero pad
+local function numeracy_add_number(pos, number, facedir, pad)
+	if number < 10 and pad == nil then
 		minetest.set_node(pos, {
 			name = "numeracy:number_centre_"..tostring(number),
 			param2 = facedir
 		})
-	elseif number < 100 then
+	elseif number < 10 and pad == ' ' then
 		minetest.set_node(pos, {
-			name = "numeracy:number_"..tostring(number),
+			name = "numeracy:number_right_"..tostring(number),
 			param2 = facedir
 		})
-	else
-		-- TODO
+	elseif number < 100 then
+		local str = tostring(number)
+		if string.len(str) < 2 then
+			str = pad..str
+		end
+		minetest.set_node(pos, {
+			name = "numeracy:number_"..str,
+			param2 = facedir
+		})
 	end
+end
+
+local numeracy_left_vec_by_facedir = {
+	[0] = vector.new(-1, 0,  0),
+	[1] = vector.new( 0, 0,  1),
+	[2] = vector.new( 1, 0,  0),
+	[3] = vector.new( 0, 0, -1),
+}
+local function numeracy_add_numbers(pos, number, facedir)
+	if number < 100 then
+		return numeracy_add_number(pos, number, facedir)
+	end
+
+	-- get segments of 2 digits (IN REVERSE ORDER!)
+	local segs = {}
+	local i = 1
+	while number > 0 do
+		segs[i] = number % 100
+		number = math.floor(number / 100)
+		i = i + 1
+	end
+
+	local left_vec = numeracy_left_vec_by_facedir[facedir]
+	local mid = math.ceil(#segs / 2)
+	-- from middle to most significant segment
+	for i = mid,#segs do
+		local node_pos = vector.add(pos, vector.multiply(left_vec, i-mid))
+		if minetest.get_node(node_pos).name ~= "air" then
+			goto skip_left
+		end
+		local pad = '0'
+		if i == #segs then
+			pad = ' '
+		end
+		local param2 = facedir
+		if i ~= mid then
+			param2 = param2 + 32
+		end
+		numeracy_add_number(node_pos, segs[i], param2, pad)
+	end
+	::skip_left::
+	-- from middle to least significant segment
+	for i = mid-1,1,-1 do
+		local node_pos = vector.add(pos, vector.multiply(left_vec, i-mid))
+		if minetest.get_node(node_pos).name ~= "air" then
+			goto skip_right
+		end
+		numeracy_add_number(node_pos, segs[i], facedir + 64, '0')
+	end
+	::skip_right::
 end
 
 local function nodes_size(nodes, range_min, range_max)
@@ -559,14 +651,55 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 
 					local order = info.o
 
-					local count_in_100 = count % 100
-					local order_in_100 = order % 100
+					local count_in_1000 = count % 1000
+					local order_in_1000 = order % 1000
+					local count_in_100 = count_in_1000 % 100
+					local order_in_100 = order_in_1000 % 100
 					local count_in_10 = count_in_100 % 10
 					local order_in_10 = order_in_100 % 10
+					local count_100s_in_1000 = math.floor(count_in_1000/100)*100
+					local order_100s_in_1000 = math.floor(order_in_1000/100)*100
 					local count_10s_in_100 = math.floor(count_in_100/10)*10
 					local order_10s_in_100 = math.floor(order_in_100/10)*10
 
-					if order_10s_in_100 < count_10s_in_100 then
+					if count > max_number then
+						-- Unsupported, don't change any blocks, just leave it there
+					elseif order_100s_in_1000 < count_100s_in_1000 then
+						-- Blocks of 100
+						if count_100s_in_1000 <= 900 then
+							local hundred_in_1000 = order_100s_in_1000/100
+							-- checkerboard pattern
+							local colour_index = ((math.abs(x) % 2) ~= (math.abs(y) % 2)) ~=
+							                     ((math.abs(z) % 2) ~= 0)
+							if colour_index then
+								colour_index = 1
+							else
+								colour_index = 0
+							end
+							local block_name = "numeracy:block_"..tostring(count_100s_in_1000).."_"..tostring(hundred_in_1000)
+							if count_100s_in_1000 == 700 then
+								block_name = "numeracy:block_"..tostring(100 + order_100s_in_1000).."_0"
+								if order_100s_in_1000 <= 400 then
+									colour_index = colour_index + 2*(order_100s_in_1000/100)
+								else
+									colour_index = colour_index + 2*(order_100s_in_1000/100 - 4)
+								end
+							elseif count_100s_in_1000 == 900 then
+								local three_hundred = math.floor(order_100s_in_1000/300)
+								local hundred_in_300 = hundred_in_1000 % 3
+								block_name = "numeracy:block_"..tostring(900 + three_hundred).."_"..tostring(hundred_in_300)
+								colour_index = colour_index + 2*three_hundred
+							elseif count_100s_in_1000 <= 400 then
+								colour_index = colour_index + 2*(count_100s_in_1000/100 - 1)
+							elseif count_100s_in_1000 <= 800 then
+								colour_index = colour_index + 2*(count_100s_in_1000/100 - 5)
+							end
+							minetest.set_node(pos, {
+								name = block_name,
+								param2 = colour_index*32 + facedir
+							})
+						end
+					elseif order_10s_in_100 < count_10s_in_100 then
 						-- Blocks of 10
 						if count_10s_in_100 == 70 then
 							local tens_for_70 = 10 + order_10s_in_100
@@ -632,9 +765,9 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 				end
 			end
 		end
-		if found_best then
+		if found_best and count <= max_number then
 			best_pos.y = best_pos.y + 1
-			numeracy_add_number(best_pos, count, facedir)
+			numeracy_add_numbers(best_pos, count, facedir)
 		end
 	end
 end
@@ -667,8 +800,11 @@ function numeracy_block_after_dig_node(pos, oldnode, oldmetadata, digger)
 	local skips = {}
 	local positions = {}
 	for i = 1, 6 do
-		skips[i] = false;
 		positions[i] = vector.add(pos, adjacent_vectors[i])
+
+		local node = minetest.get_node(positions[i])
+		local adj_node_type = get_node_type(node);
+		skips[i] = not (node and adj_node_connected(NODE_BLOCK, i, adj_node_type, node.param2))
 	end
 	for i = 1, 6 do
 		if skips[i] == false then

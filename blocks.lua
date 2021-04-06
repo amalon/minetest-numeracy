@@ -143,3 +143,101 @@ for i,info in pairs(ten_blocks) do
 		})
 	end
 end
+
+local hundred_blocks = {
+	[100] = {
+		palette    = "numeracy_block_100_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[200] = {
+		qty        = 2,
+		palette    = "numeracy_block_100_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[300] = {
+		qty        = 3,
+		palette    = "numeracy_block_100_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[400] = {
+		qty        = 4,
+		palette    = "numeracy_block_100_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[500] = {
+		qty        = 5,
+		palette    = "numeracy_block_500_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[600] = {
+		qty        = 6,
+		palette    = "numeracy_block_500_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[700] = {
+		palette    = "numeracy_block_500_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[800] = {
+		qty        = 8,
+		palette    = "numeracy_block_500_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[900] = {
+		qty        = 3,
+		palette    = "numeracy_block_900_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[901] = {
+		qty        = 3,
+		palette    = "numeracy_block_900_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+	[902] = {
+		qty        = 3,
+		palette    = "numeracy_block_900_palette.png",
+		tile_side  = "numeracy_block_white_side.png",
+		tile_front = "numeracy_block_white_side.png",
+	},
+}
+
+for i,info in pairs(hundred_blocks) do
+	local qty = info.qty or 1
+	for j = 0,qty - 1 do
+		minetest.register_node("numeracy:block_"..tostring(i).."_"..tostring(j), {
+			description = "Numeracy block "..tostring(i).." ("..tostring(j)..")",
+			tiles = {
+				info.tile_side,
+				info.tile_side,
+				info.tile_side,
+				info.tile_side,
+				info.tile_front,
+				info.tile_front,
+			},
+			palette = info.palette,
+			groups = { cracky = 2, not_in_creative_inventory = 1 },
+			drop = "numeracy:block",
+
+			drawtype = "nodebox",
+			node_box = node_box_ten,
+
+			connects_to = { "numeracy:block_"..tostring(i).."_"..tostring(j) },
+
+			paramtype = "light",
+			paramtype2 = "colorfacedir",
+
+			on_place = numeracy_block_on_place,
+			after_dig_node = numeracy_block_after_dig_node,
+		})
+	end
+end
