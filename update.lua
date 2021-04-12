@@ -183,7 +183,7 @@ local function numeracy_add_numbers(pos, number, facedir)
 	for i = mid,#segs do
 		local node_pos = vector.add(pos, vector.multiply(left_vec, i-mid))
 		if minetest.get_node(node_pos).name ~= "air" then
-			goto skip_left
+			break
 		end
 		local pad = '0'
 		if i == #segs then
@@ -195,16 +195,14 @@ local function numeracy_add_numbers(pos, number, facedir)
 		end
 		numeracy_add_number(node_pos, segs[i], param2, pad)
 	end
-	::skip_left::
 	-- from middle to least significant segment
 	for i = mid-1,1,-1 do
 		local node_pos = vector.add(pos, vector.multiply(left_vec, i-mid))
 		if minetest.get_node(node_pos).name ~= "air" then
-			goto skip_right
+			break
 		end
 		numeracy_add_number(node_pos, segs[i], facedir + 64, '0')
 	end
-	::skip_right::
 end
 
 local function nodes_size(nodes, range_min, range_max)
