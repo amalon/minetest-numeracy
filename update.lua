@@ -21,7 +21,7 @@ local NODE_BLOCK  = 1
 local NODE_NUMBER = 2
 
 -- Maximum supported number
-local max_number = 999
+local max_number = 10000
 
 local function nodes_test(nodes, pos)
 	if not nodes[pos.y] then
@@ -694,12 +694,16 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 
 					local order = info.o
 
-					local count_in_1000 = count % 1000
-					local order_in_1000 = order % 1000
+					local count_in_10000 = count % 10000
+					local order_in_10000 = order % 10000
+					local count_in_1000 = count_in_10000 % 1000
+					local order_in_1000 = order_in_10000 % 1000
 					local count_in_100 = count_in_1000 % 100
 					local order_in_100 = order_in_1000 % 100
 					local count_in_10 = count_in_100 % 10
 					local order_in_10 = order_in_100 % 10
+					local count_1000s_in_10000 = math.floor(count_in_10000/1000)*1000
+					local order_1000s_in_10000 = math.floor(order_in_10000/1000)*1000
 					local count_100s_in_1000 = math.floor(count_in_1000/100)*100
 					local order_100s_in_1000 = math.floor(order_in_1000/100)*100
 					local count_10s_in_100 = math.floor(count_in_100/10)*10
@@ -707,6 +711,35 @@ local function numeracy_restyle_blocks(nodes, count, doer)
 
 					if count > max_number then
 						-- Unsupported, don't change any blocks, just leave it there
+					elseif count == 10000 then
+						-- SURELY 10000 is enough for anybody!
+						minetest.set_node(pos, {
+							name = "numeracy:block_"..tostring(count).."_"..tostring(order_1000s_in_10000/1000),
+							param2 = facedir
+						})
+					elseif order_1000s_in_10000 < count_1000s_in_10000 then
+						-- Blocks of 1000
+						if count_1000s_in_10000 <= 9000 then
+							local thousand_in_10000 = order_1000s_in_10000/1000
+							-- checkerboard pattern
+							local colour_index
+							local block_name = "numeracy:block_"..tostring(count_1000s_in_10000).."_"..tostring(thousand_in_10000)
+							if count_1000s_in_10000 == 7000 then
+								block_name = "numeracy:block_"..tostring(1000 + order_1000s_in_10000).."_0"
+								colour_index = order_1000s_in_10000/1000
+							elseif count_1000s_in_10000 == 9000 then
+								local three_thousand = math.floor(order_1000s_in_10000/3000)
+								local thousand_in_3000 = thousand_in_10000 % 3
+								block_name = "numeracy:block_"..tostring(9000 + three_thousand).."_"..tostring(thousand_in_3000)
+								colour_index = 8 + three_thousand
+							else
+								colour_index = count_1000s_in_10000/1000 - 1
+							end
+							minetest.set_node(pos, {
+								name = block_name,
+								param2 = colour_index
+							})
+						end
 					elseif order_100s_in_1000 < count_100s_in_1000 then
 						-- Blocks of 100
 						if count_100s_in_1000 <= 900 then

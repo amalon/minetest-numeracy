@@ -140,6 +140,12 @@ local ten_blocks = {
 		tile_side  = "numeracy_block_white_side.png^[multiply:#424746",
 		tile_front = "numeracy_block_white_side.png^[multiply:#848F8B",
 	},
+	-- 10000s are rather similar to 10s
+	[10000] = {
+		qty        = 10,
+		tile_side  = "numeracy_block_white_side.png^[multiply:#FF002B",
+		tile_front = "numeracy_block_white_side.png"
+	},
 }
 
 for i,info in pairs(ten_blocks) do
@@ -263,6 +269,62 @@ for i,info in pairs(hundred_blocks) do
 
 			paramtype = "light",
 			paramtype2 = "colorfacedir",
+
+			on_place = numeracy_block_on_place,
+			after_dig_node = numeracy_block_after_dig_node,
+		})
+	end
+end
+
+local thousand_blocks = {
+	[1000] = {},
+	[2000] = {
+		qty        = 2,
+	},
+	[3000] = {
+		qty        = 3,
+	},
+	[4000] = {
+		qty        = 4,
+	},
+	[5000] = {
+		qty        = 5,
+	},
+	[6000] = {
+		qty        = 6,
+	},
+	[7000] = {},
+	[8000] = {
+		qty        = 8,
+	},
+	[9000] = {
+		qty        = 3,
+	},
+	[9001] = {
+		qty        = 3,
+	},
+	[9002] = {
+		qty        = 3,
+	},
+}
+
+for i,info in pairs(thousand_blocks) do
+	local qty = info.qty or 1
+	for j = 0,qty - 1 do
+		minetest.register_node("numeracy:block_"..tostring(i).."_"..tostring(j), {
+			description = "Numeracy block "..tostring(i).." ("..tostring(j)..")",
+			tiles = { "numeracy_block_white_side.png" },
+			palette = "numeracy_block_palette.png",
+			groups = { cracky = 2, not_in_creative_inventory = 1 },
+			drop = "numeracy:block",
+
+			drawtype = "nodebox",
+			node_box = node_box_ten,
+
+			connects_to = { "numeracy:block_"..tostring(i).."_"..tostring(j) },
+
+			paramtype = "light",
+			paramtype2 = "color",
 
 			on_place = numeracy_block_on_place,
 			after_dig_node = numeracy_block_after_dig_node,
