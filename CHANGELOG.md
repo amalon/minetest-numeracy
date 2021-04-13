@@ -1,5 +1,5 @@
-Changes in next release
-=======================
+Changes in [0.3](https://github.com/amalon/minetest-numeracy/releases/tag/v0.3) (2021-04-13)
+============================================================================================
 
  * Fix for F-Droid Minetest (with Lua < 5.2)
  * Add square arrangements 25-81
@@ -7,7 +7,7 @@ Changes in next release
  * Basic support for numbers 1000-10000
 
 Changes in [0.2](https://github.com/amalon/minetest-numeracy/releases/tag/v0.2) (2021-04-11)
-==============
+============================================================================================
 
  * Basic support for numbers 100-999
  * Stop overlap of 10 blocks
