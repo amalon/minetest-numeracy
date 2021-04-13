@@ -99,12 +99,12 @@ local ten_blocks = {
 	},
 	[40] = {
 		qty        = 4,
-		tile_side  = "numeracy_block_white_side.png^[multiply:#BEFFA6",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#6BDB63",
 		tile_front = "numeracy_block_white_side.png^[multiply:#BEFFA6",
 	},
 	[50] = {
 		qty        = 5,
-		tile_side  = "numeracy_block_white_side.png^[multiply:#A9F5EA",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#5AC7E4",
 		tile_front = "numeracy_block_white_side.png^[multiply:#A9F5EA",
 	},
 	[60] = {
@@ -175,66 +175,66 @@ end
 local hundred_blocks = {
 	[100] = {
 		palette    = "numeracy_block_100_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#FF002B",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[200] = {
 		qty        = 2,
 		palette    = "numeracy_block_100_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#FF9500",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[300] = {
 		qty        = 3,
 		palette    = "numeracy_block_100_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#F4E41C",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[400] = {
 		qty        = 4,
 		palette    = "numeracy_block_100_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#6BDB63",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[500] = {
 		qty        = 5,
 		palette    = "numeracy_block_500_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#5AC7E4",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[600] = {
 		qty        = 6,
 		palette    = "numeracy_block_500_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#613999",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[700] = {
 		palette    = "numeracy_block_500_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#C777E5",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[800] = {
 		qty        = 8,
 		palette    = "numeracy_block_500_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#F73BAB",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[900] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[901] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[902] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
 		tile_front = "numeracy_block_white_side.png",
 	},
 }
