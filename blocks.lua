@@ -127,17 +127,17 @@ local ten_blocks = {
 	},
 	[90] = {
 		qty        = 3,
-		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#646567",
 		tile_front = "numeracy_block_white_side.png^[multiply:#C8CBD0",
 	},
 	[91] = {
 		qty        = 3,
-		tile_side  = "numeracy_block_white_side.png^[multiply:#A3A4A6",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#515253",
 		tile_front = "numeracy_block_white_side.png^[multiply:#A3A4A6",
 	},
 	[92] = {
 		qty        = 3,
-		tile_side  = "numeracy_block_white_side.png^[multiply:#848F8B",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#424746",
 		tile_front = "numeracy_block_white_side.png^[multiply:#848F8B",
 	},
 }
@@ -222,19 +222,19 @@ local hundred_blocks = {
 	[900] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#7f7f7f",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[901] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#7f7f7f",
 		tile_front = "numeracy_block_white_side.png",
 	},
 	[902] = {
 		qty        = 3,
 		palette    = "numeracy_block_900_palette.png",
-		tile_side  = "numeracy_block_white_side.png^[multiply:#C8CBD0",
+		tile_side  = "numeracy_block_white_side.png^[multiply:#7f7f7f",
 		tile_front = "numeracy_block_white_side.png",
 	},
 }
