@@ -547,6 +547,26 @@ local numeracy_cube_specials = {
 	},
 }
 
+-- [count][width][height][i] = { top to bottom, left to right, 0 for gap }
+local numeracy_irregulars = {
+}
+
+-- Process irregulars
+for count, a in pairs(numeracy_irregulars) do
+	for width, b in pairs(a) do
+		for height, c in pairs(b) do
+			for i, d in ipairs(c) do
+				d.order = {}
+				for j, v in ipairs(d) do
+					if v > 0 then
+						table.insert(d.order, v)
+					end
+				end
+			end
+		end
+	end
+end
+
 -- We only need rotation around y+ axis for now
 local numeracy_rotation = {
 	[0] = { x = { 'x',  1 }, y = { 'y',  1 }, z = { 'z',  1 } },
@@ -565,6 +585,31 @@ local function numeracy_rotate_sorting(sorting, facedir)
 		new_sorting[i] = new_s
 	end
 	return new_sorting
+end
+
+-- e.g. numeracy_match_irregular({...}, {...}, width, height, min, max, {{'x', 1}, {'y', -1}})
+local function numeracy_match_irregular(nodes, layout, width, height, min, max, ordering)
+	for y = 1, height do
+		for x = 1, width do
+			local index = x + (y - 1)*width
+			if layout[index] > 0 then
+				local pos = {x = min.x, y = min.y, z = min.z}
+				local lpos = {y, x}
+				for i, order in ipairs(ordering) do
+					if order[2] == nil or order[2] >= 0 then
+						pos[order[1]] = min[order[1]] + (lpos[i] - 1)
+					else
+						pos[order[1]] = max[order[1]] - (lpos[i] - 1)
+					end
+				end
+				-- expect a block here
+				if nodes_test(nodes, pos) ~= NODE_BLOCK then
+					return false
+				end
+			end
+		end
+	end
+	return true
 end
 
 -- Assign an ordering to the nodes
@@ -624,6 +669,26 @@ local function numeracy_sort_blocks(nodes, count, doer)
 					numeracy_sort(nodes, { { d2, -1 }, { d1, 1} },
 					                  numeracy_rect_specials[count][size[d1]])
 					return facedir
+				end
+			end
+		end
+
+		-- irregular shapes
+		if rectangle_class == 0 and numeracy_irregulars[count] then
+			local orientations = { { d1, d2 }, { d2, d1 } }
+			for io, dims in ipairs(orientations) do
+				if numeracy_irregulars[count][size[dims[1]]] and numeracy_irregulars[count][size[dims[1]]][size[dims[2]]] then
+					for i, layout in ipairs(numeracy_irregulars[count][size[dims[1]]][size[dims[2]]]) do
+						for dir1=-1,1,2 do
+							for dir2=-1,1,2 do
+								local ordering = { { dims[2], dir1 }, { dims[1], dir2 } }
+								if numeracy_match_irregular(nodes, layout, size[dims[1]], size[dims[2]], min, max, ordering) then
+									numeracy_sort(nodes, ordering, layout.order)
+									return facedir
+								end
+							end
+						end
+					end
 				end
 			end
 		end
