@@ -573,10 +573,11 @@ local numeracy_cube_specials = {
 	[3] = { -- 27
 		-- 27 is a cube, with corners and edges part of 20
 		-- Number should probably be further forward
-		sorting = { { 'y', 1 }, { 'x', 1 }, { 'z', 1 } },
-		numbering = {  1,  2,  3,   4, 26,  5,   6,  7,  8, 	-- bottom
+		sorting = { { 'y', -1 }, { 'x', 1 }, { 'z', 1 } },
+		--             f left  b    f       b    f right b
+		numbering = { 13, 14, 15,  16, 21, 17,  18, 19, 20, 	-- top
 		               9, 22, 11,  23, 27, 24,  12, 25, 10, 	-- mid
-		              13, 14, 15,  16, 21, 17,  18, 19, 20 }	-- top
+		               1,  2,  3,   4, 26,  5,   6,  7,  8 }	-- bottom
 	},
 }
 
