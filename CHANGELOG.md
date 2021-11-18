@@ -1,3 +1,14 @@
+Changes in [0.4](https://github.com/amalon/minetest-numeracy/releases/tag/v0.4) (2021-11-18)
+============================================================================================
+
+ * New original square arrangements: 121, 144
+ * Update square arrangements: 81
+ * New rectangle arrangements: 32 (4x8)
+ * New cube arrangement: 64
+ * New triangle arrangements: 36, 45, 55
+ * New irregular arrangements: 13, 17, 19 (monster), 31 (calendar),
+   55 (rocket), 80 (roboctoblock, spidoctoblock, dinoctoblock)
+
 Changes in [0.3](https://github.com/amalon/minetest-numeracy/releases/tag/v0.3) (2021-04-13)
 ============================================================================================
 

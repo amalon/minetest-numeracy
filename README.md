@@ -10,7 +10,7 @@ kids TV programme Numberblocks.
 
 ![Screenshot](docs/screenshot.jpg)
 
-Version: 0.3
+Version: 0.4
 
 Licence: LGPL 2.1 or later, CC-BY-SA 3.0 UNPORTED (see LICENSE.txt)
 
