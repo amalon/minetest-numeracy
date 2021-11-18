@@ -549,6 +549,31 @@ local numeracy_cube_specials = {
 
 -- [count][width][height][i] = { top to bottom, left to right, 0 for gap }
 local numeracy_irregulars = {
+	[13] = {
+		[3] = {
+			[6] = {
+				{  0, 11, 12,
+				   1,  6, 13,
+				   2,  7,  0,
+				   3,  8,  0,
+				   4,  9,  0,
+				   5, 10,  0 },
+			},
+		},
+	},
+	[17] = {
+		[4] = {
+			[7] = {
+				{  0,  0,  0, 17,
+				  13, 14, 15, 16,
+				  12,  1,  6,  0,
+				  11,  2,  7,  0,
+				   0,  3,  8,  0,
+				   0,  4,  9,  0,
+				   0,  5, 10,  0 },
+			},
+		},
+	},
 }
 
 -- Process irregulars
